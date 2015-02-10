@@ -1,7 +1,7 @@
 load 'deploy'
 
 # Capistrano configuration
-server 'linode.kovyrin.net', :app, :web, :db, :primary => true
+server 'hosting.kovyrin.net', :app, :db, :web, :primary => true
 
 set :application, 'scalexis.com'
 set :repository,  'git@github.com:kovyrin/scalexis.com.git'
@@ -26,9 +26,13 @@ namespace :deploy do
   
   desc 'No finalization needed'
   task :finalize_update do
+    run "rm -f #{release_path}/Capfile #{release_path}/config/deploy.rb"
   end
   
   desc 'No restarting needed'
   task :restart do
   end
 end
+
+# This is VERY slow operation, so it should be the LAST
+after :deploy, 'deploy:cleanup'
